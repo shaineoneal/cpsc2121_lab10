@@ -86,11 +86,7 @@ string neighbor_label(int s, int t)
     else return "Cross with " + which_cross;
 }
 
-int counter = 0;
-bool checkState(bitset<4> currBits, bitset<4> newBits) {
-
-counter++;
-cout << currBits.to_string() << " -> " << newBits.to_string() << endl;
+bool checkValid(bitset<4> currBits, bitset<4> newBits) {
 
     //if wolf and goat are on same side without person
     if(newBits[wolf] == newBits[goat] && newBits[me] != newBits[wolf]) {
@@ -102,58 +98,50 @@ cout << currBits.to_string() << " -> " << newBits.to_string() << endl;
         return false;
     }
 
-    //if you didn't just return from same state
-    if(!nbrs.empty() && edge_label.count(make_pair((state)newBits.to_ulong(), (state)currBits.to_ulong()))) {
-        return false;
+    int bitCounter = 0;
+
+    for(int i = 0; i < 3; i++) {
+        if(currBits[i] != newBits[i]) {
+            bitCounter++;
+            if(currBits[me] == newBits[me]) return false;
+        }
     }
-cout << "true" << endl;
+    if(bitCounter > 1) return false;    //if more than 2 things moved
+    if(bitCounter == 0) return false;   //if nothing is moved
+
+
+
+cout << currBits << " --> " << newBits << endl;
+    //otherwise
     return true;
 }
-
-void recursiveStates(bitset<4> currState) {
-
-
-   //for(int j = 0; j < 64; j++) {     
-        if(currState.to_ulong() == 15) return;
-
-
-        for(int i = 0; i < 3; i++) {
-
-            bitset<4> newState = currState;
-            vector<state> nbrsVect;
-
-            newState[me].flip();    //move me 
-            if(i != 0) newState[i - 1].flip();
-
-//THIS STATEMENT WHEN currState = 0101 AND newState = 0100
-            if(checkState(currState, newState)) {
-                pair<state, state> currToNew((state)currState.to_ulong(), (state)newState.to_ulong());
-
-                nbrsVect.push_back(currToNew.second);
-                nbrs.insert({ currToNew.first, nbrsVect });
-                edge_label.insert({ currToNew, neighbor_label(currToNew.first, currToNew.second) });
-
-                recursiveStates(newState);
-            } else newState = currState;
-            
-        }
-   //}
-   return;
-
-}
-
-
-
-
 
 void build_graph(void)
 {
     //Implement this function
 
-    bitset<4> initialState;     //0000
-    recursiveStates(initialState);
-    
+    bitset<4> currState;    //0000
+    bitset<4> newState;     //0000
 
+    for(int c = 0; c < 16; c++) {   //iterate thru current states
+        currState = c;  //initialize currState
+        vector<state> nbrsVect; //create new vector for neighboring states
+        
+        for (int n = 0; n < 16; n++) {  //iterate thru all possible new states
+            
+            newState = n;   //initialize newState
+
+            if(checkValid(currState, newState)) {
+                pair<state, state> currToNew((state)currState.to_ulong(), (state)newState.to_ulong());
+                
+                edge_label.insert({ currToNew, neighbor_label(currToNew.first, currToNew.second) });
+
+                //add to vector of neighbors
+                nbrsVect.push_back((state)newState.to_ulong());
+            }   
+        }
+        nbrs.insert({ (state)currState.to_ulong(), nbrsVect });
+    }
 
 }
 
