@@ -109,9 +109,6 @@ bool checkValid(bitset<4> currBits, bitset<4> newBits) {
     if(bitCounter > 1) return false;    //if more than 2 things moved
     if(bitCounter == 0) return false;   //if nothing is moved
 
-
-
-cout << currBits << " --> " << newBits << endl;
     //otherwise
     return true;
 }
@@ -132,12 +129,16 @@ void build_graph(void)
             newState = n;   //initialize newState
 
             if(checkValid(currState, newState)) {
+                //create pair
                 pair<state, state> currToNew((state)currState.to_ulong(), (state)newState.to_ulong());
                 
+                //insert to edge_label
                 edge_label.insert({ currToNew, neighbor_label(currToNew.first, currToNew.second) });
 
                 //add to vector of neighbors
                 nbrsVect.push_back((state)newState.to_ulong());
+
+            cout << currState<< " --> " << newState << endl;
             }   
         }
         nbrs.insert({ (state)currState.to_ulong(), nbrsVect });
