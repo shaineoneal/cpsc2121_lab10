@@ -86,8 +86,12 @@ string neighbor_label(int s, int t)
     else return "Cross with " + which_cross;
 }
 
+int counter = 0;
 bool checkState(bitset<4> currBits, bitset<4> newBits) {
-    //check new state
+
+counter++;
+cout << currBits.to_string() << " -> " << newBits.to_string() << endl;
+
     //if wolf and goat are on same side without person
     if(newBits[wolf] == newBits[goat] && newBits[me] != newBits[wolf]) {
         return false;
@@ -97,18 +101,22 @@ bool checkState(bitset<4> currBits, bitset<4> newBits) {
     if(newBits[goat] == newBits[cabbage] && newBits[me] != newBits[goat]) {
         return false;
     }
+
     //if you didn't just return from same state
-    if((!nbrs.empty()) && nbrs.rbegin()->first != (state)newBits.to_ulong()) {
+    if(!nbrs.empty() && edge_label.count(make_pair((state)newBits.to_ulong(), (state)currBits.to_ulong()))) {
         return false;
     }
-
+cout << "true" << endl;
     return true;
 }
 
 void recursiveStates(bitset<4> currState) {
 
-   for(int j = 0; j < 64; j++) {     
-        
+
+   //for(int j = 0; j < 64; j++) {     
+        if(currState.to_ulong() == 15) return;
+
+
         for(int i = 0; i < 3; i++) {
 
             bitset<4> newState = currState;
@@ -124,11 +132,12 @@ void recursiveStates(bitset<4> currState) {
                 nbrsVect.push_back(currToNew.second);
                 nbrs.insert({ currToNew.first, nbrsVect });
                 edge_label.insert({ currToNew, neighbor_label(currToNew.first, currToNew.second) });
+
                 recursiveStates(newState);
             } else newState = currState;
             
         }
-   }
+   //}
    return;
 
 }
