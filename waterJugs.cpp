@@ -69,7 +69,6 @@ void build_graph(void)
     int a = 0,
         b = 0;
 
-
     for(int itA = 0; itA <= 3; itA++) {   //iterate thru all possible states of A
         int a = itA;
         
@@ -115,6 +114,9 @@ void build_graph(void)
                 nbrsVect.push_back(make_pair(a, b));
 
                 edge_label.insert({ make_pair(make_pair(itA, itB), make_pair(a, b)), actions[act] });
+                //return a and b to original numbers
+                a = itA;
+                b = itB;
             }
             nbrs.insert({ make_pair(itA, itB), nbrsVect});
         }
@@ -122,7 +124,7 @@ void build_graph(void)
 
 }
 
-int main(void)
+/*int main(void)
 {
     build_graph();
 
@@ -137,4 +139,4 @@ int main(void)
         cout << "No path!\n";
   
     return 0;
-}
+}*/
