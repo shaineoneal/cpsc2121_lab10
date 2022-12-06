@@ -1,8 +1,8 @@
 /*
- * Name:
- * Date Submitted:
- * Lab Section:
- * Assignment Name:
+ * Name: Shaine O'Neal
+ * Date Submitted: 12/5/2022
+ * Lab Section: 4
+ * Assignment Name: Using Breadth-First Search to Solve Puzzles
  */
 
 #include <iostream>
@@ -100,13 +100,13 @@ bool checkValid(bitset<4> currBits, bitset<4> newBits) {
 
     int bitCounter = 0;
 
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 4; i++) {
         if(currBits[i] != newBits[i]) {
             bitCounter++;
             if(currBits[me] == newBits[me]) return false;
         }
     }
-    if(bitCounter > 1) return false;    //if more than 2 things moved
+    if(bitCounter > 2) return false;    //if more than 2 things moved
     if(bitCounter == 0) return false;   //if nothing is moved
 
     //otherwise
@@ -137,16 +137,13 @@ void build_graph(void)
 
                 //add to vector of neighbors
                 nbrsVect.push_back((state)newState.to_ulong());
-
-            cout << currState<< " --> " << newState << endl;
             }   
         }
         nbrs.insert({ (state)currState.to_ulong(), nbrsVect });
     }
-
 }
 
-int main(void)
+/*int main(void)
 {
   build_graph();
 
@@ -159,4 +156,4 @@ int main(void)
     cout << "No path!\n";
   
   return 0;
-}
+}*/
